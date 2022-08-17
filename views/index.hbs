@@ -10,8 +10,13 @@
   <form action="/" method="POST">
     <div class="mb-3">
       <label for="URL" class="form-label">URL</label>
-      <input type="text" class="form-control" id="URL" aria-describedby="URL" placeholder="請輸入要縮短的網址">
+      <input type="text" class="form-control" name="URL" id="URL" aria-describedby="URL" placeholder="請輸入要縮短的網址">
     </div>
-    <button type="button" class="btn btn-outline-primary">複製</button>
+    <button type="submit" class="btn btn-primary">送出</button>
   </form>
+  {{#if shortURL}}
+  <div class="alert alert-info" role="alert">
+    <a href="{{shortURL}}">{{shortURL}}</a>
+  </div>
+  {{/if}}
 </div>

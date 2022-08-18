@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const URLs = require('../../models/URL')
+const randomValue = require('../../models/randomValue')
 
 router.use(express.urlencoded({ extended: true }))
 
@@ -11,12 +12,12 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   const URL = req.body.URL
-  const letterAndNumber = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
-  let randomValue = ''
+  const error = '網址格式不正確，請重新輸入。'
 
-  for (let i = 0; i < 5; i++) {
-    const randomGroup = Math.floor(Math.random() * (letterAndNumber.length - 1))
-    randomValue += letterAndNumber[randomGroup]
+  if (!URL.match(/^(https?:)/
+  )) {
+    res.render('index', { error: error })
+    return
   }
 
   URLs.findOne({ URL })
@@ -24,11 +25,10 @@ router.post('/', (req, res) => {
     .then(data => {
       //如果資料庫已有相同網址，就回傳先前建立過的縮址
       if (data) {
-        const shortURL = req.protocol + '://' + req.headers.host + '/' + data.shortURL
-        res.render('index', { shortURL: shortURL, URL: data.URL })
+        res.render('index', { shortURL: data.shortURL })
       } else {
-        const shortURL = req.protocol + '://' + req.headers.host + '/' + randomValue
-        URLs.create({ URL, shortURL: randomValue })
+        const shortURL = req.protocol + '://' + req.headers.host + '/' + randomValue()
+        URLs.create({ URL, shortURL: shortURL })
           .then(() => res.render('index', { URL: URL, shortURL: shortURL }))
       }
     })
@@ -36,8 +36,7 @@ router.post('/', (req, res) => {
 })
 
 router.get('/:shortURL', (req, res) => {
-  const shortURL = req.params.shortURL
-  const URL = req.protocol + '://' + req.headers.host + '/' + shortURL
+  const shortURL = req.protocol + '://' + req.headers.host + '/' + req.params.shortURL
 
   URLs.findOne({ shortURL })
     .then(data => {

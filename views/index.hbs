@@ -16,7 +16,12 @@
   </form>
   {{#if shortURL}}
   <div class="alert alert-info" role="alert">
-    <a href="{{shortURL}}">{{shortURL}}</a>
+    <a href="{{shortURL}}" target="_blank">{{shortURL}}</a>
+  </div>
+  {{/if}}
+  {{#if error}}
+  <div class="alert alert-danger" role="alert">
+    {{error}}
   </div>
   {{/if}}
 </div>

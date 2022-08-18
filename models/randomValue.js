@@ -5,7 +5,7 @@ function randomValue() {
     const randomGroup = Math.floor(Math.random() * (letterAndNumber.length - 1))
     randomValue += letterAndNumber[randomGroup]
   }
-  console.log(randomValue)
+  return randomValue
 }
 
-randomValue()
+module.exports = randomValue
